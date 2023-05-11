@@ -13,15 +13,15 @@ minute_color = (0, 0, 255)#blue
 second_color = (255, 0, 0) #red
 am_color = (255,255,0) #gul
 pm_color = (0,255,255) #cyan
-off = (0, 0, 0)
-choice = "up"
+off = (0, 0, 0) #off color
+choice = "up" #choice default UP
 
-sense.show_message("Programmet starter", 0.05)
+sense.show_message("Programmet starter", 0.05)# message to show at start
 
-sense.clear()
+sense.clear() #clear diodes
 
 def display_binary(value, row, color):
-    """ Sætter farve på en diode, når der skal vises 3 rækker"""
+    #setting color on a diode if there should show 6 columns
     if value == "AM":
         sense.set_pixel(0, 7, am_color)
     elif value == "PM":
@@ -35,7 +35,7 @@ def display_binary(value, row, color):
                 sense.set_pixel(x, row, off)
 
 def display_binary_col(value, column, color):
-    """ Sætter farve på en diode, når der skal vises 6 colonner"""
+    #setting color on a diode if there should show 6 columns
     numbers = []
     if value == "AM":
         sense.set_pixel(0, 7, am_color)
@@ -59,6 +59,8 @@ def display_binary_col(value, column, color):
             else:
                 sense.set_pixel(column, y, off)
 
+
+#push up event
 def pushed_up(event):
     #if the joy is pressed up and released, show time in 24 hours format in 3 rows
     if event.action == "pressed":
@@ -67,6 +69,7 @@ def pushed_up(event):
         global choice
         choice = "up"
 
+# push down event
 def pushed_down(event):
     #if joy is pressed down and released, show time in 12 hours format i 3 rown
     if event.action == "pressed":
@@ -78,6 +81,7 @@ def pushed_down(event):
         print("Holding")
         choice = "held"
 
+#push left event
 def pushed_left(event):
     #if joy is pressed left and released, show time in 24 hour format in 6 columns
     if event.action == "pressed":
@@ -86,6 +90,7 @@ def pushed_left(event):
         global choice
         choice = "left"
 
+#push right event
 def pushed_right(event):
     #if the joy pressed right, show time in 12 hour format in 6 columns
     if event.direction == "right" and event.action == "pressed":
@@ -94,6 +99,7 @@ def pushed_right(event):
         global choice
         choice = "right" 
 
+#middle event EXIT
 def joy_pressed(event):
     #if the joy middle is pressed = exit
     if event.direction == "middle" and event.action == "pressed":
@@ -103,18 +109,18 @@ def joy_pressed(event):
         choice = "pressed"
 
 
-print(choice)
+print(choice) # print your choice to terminal
         
-
-sense.stick.direction_up = pushed_up
-sense.stick.direction_down = pushed_down
-sense.stick.direction_left = pushed_left
-sense.stick.direction_right = pushed_right
-sense.stick.direction_middle = joy_pressed
+# sense joystick events calling definitions
+sense.stick.direction_up = pushed_up # if pushed up
+sense.stick.direction_down = pushed_down # if pushed down
+sense.stick.direction_left = pushed_left #if pushed left
+sense.stick.direction_right = pushed_right # if pushed right
+sense.stick.direction_middle = joy_pressed # joy middle pressed event
 
 while True:    
     # the loop showing time in the chosen format
-    t = datetime.now()
+    t = datetime.now() #current time and date
     # print(t)
     if choice == "up":  # 24 hour format in 3 rows
         display_binary(t.hour, 3, hour_color)
@@ -122,10 +128,10 @@ while True:
         display_binary(t.second, 5, second_color)
         time.sleep(0.01)
     elif choice == "down": #12 hours format in 3 rows
-        display_binary(int(t.strftime("%I")), 3, hour_color)
+        display_binary(int(t.strftime("%I")), 3, hour_color) #Hour (12-hour clock) as a decimal number.
         display_binary(t.minute, 4, minute_color)
         display_binary(t.second, 5, second_color)
-        display_binary(t.strftime("%p"), 0, None)  # viser om det er for eller eftermiddag (Am/PM) = AM : yellow  PM :  cyan'ish
+        display_binary(t.strftime("%p"), 0, None)  # Indicates if it is AM or PM,(Am/PM) = AM : yellow  PM :  cyan'ish
         #sense.show_message(t.strftime("%H:%M:%S %p"))
         time.sleep(0.01)
     elif choice == "left": #24 timers format i 6 colonner
@@ -134,10 +140,10 @@ while True:
         display_binary_col(t.second, 6, second_color)
         time.sleep(0.01)
     elif choice == "right":  #12 timers format i 6 colonner
-        display_binary_col(int(t.strftime("%I")), 0, hour_color)
+        display_binary_col(int(t.strftime("%I")), 0, hour_color) #Hour (12-hour clock) as a decimal number.
         display_binary_col(t.minute, 3, minute_color)
         display_binary_col(t.second, 6, second_color)
-        display_binary_col(t.strftime("%p"), 0, None) # viser om det er for eller eftermiddag (Am/PM) = AM : yellow  PM :  cyan'ish
+        display_binary_col(t.strftime("%p"), 0, None) # Indicates if it is AM or PM,(Am/PM) = AM : yellow  PM :  cyan'ish
         time.sleep(0.01)
     elif choice == "held":
          #if holding joy DOWN -> holddown show with digits
