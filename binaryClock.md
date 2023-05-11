@@ -24,20 +24,3 @@ There are 4 display types that are controlled with a joystick:
 4) Left, also displays 6 columns, but in 24-hour format.
 
 At the end of the program, a corresponding message is also displayed.
-
-# OPTIONS
-**-rows 24**
-: select 3 rows and in 24 hour format
-
-**-rows 12**
-: select 3 rows and in 12 hour format
-
-**-columns 24**
-: select 6 columns and in 24 hour format
-
-**-columns 12**
-: select 6 columns and in 12 hour format
-
-# EXAMPLES
-**binaryClock -n rows 12**
-: Displays the clock in 12 hour format, in 3 rows
