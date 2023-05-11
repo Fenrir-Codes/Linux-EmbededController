@@ -1,8 +1,6 @@
 #! /bin/python
 
-""" BinaryClock script, bruger sense hat til at vise et binært ur"""
-
-from sense_hat import SenseHat, ACTION_PRESSED, ACTION_HELD, ACTION_RELEASED
+from sense_hat import SenseHat
 import time
 from datetime import datetime
 import signal 
@@ -10,18 +8,11 @@ import sys
 
 sense = SenseHat()
 
-def signal_term_handler(signal, frame):
-    """ Håndtere afslutning af program """
-    sense.show_message("Programmet slutter", 0.05)
-    sys.exit(0)
-signal.signal(signal.SIGTERM, signal_term_handler)
-signal.signal(signal.SIGINT, signal_term_handler)
-
 hour_color = (0, 255, 0)#green
 minute_color = (0, 0, 255)#blue
 second_color = (255, 0, 0) #red
-am_color = (255,255,0)
-pm_color = (0,255,255)
+am_color = (255,255,0) #gul
+pm_color = (0,255,255) #cyan
 off = (0, 0, 0)
 choice = "up"
 
@@ -69,98 +60,89 @@ def display_binary_col(value, column, color):
                 sense.set_pixel(column, y, off)
 
 def pushed_up(event):
-    """ Joystick event 'up', sætter 24 timers format, i 3 rækker"""
-    if event.action != ACTION_RELEASED:
+    #if the joy is pressed up and released, show time in 24 hours format in 3 rows
+    if event.action == "pressed":
         sense.clear()  
         print("up")
         global choice
         choice = "up"
 
 def pushed_down(event):
-    """ Joystick event 'down', sætter 12 timers format, i 3 rækker"""
-    if event.action != ACTION_RELEASED:
+    #if joy is pressed down and released, show time in 12 hours format i 3 rown
+    if event.action == "pressed":
         sense.clear()  
         print("down")
         global choice
         choice = "down"
+    elif event.direction == "down" and event.action == "held":
+        print("Holding")
+        choice = "held"
 
 def pushed_left(event):
-    """ Joystick event 'left', sætter 24 timers format, i 6 colonner"""
-    if event.action != ACTION_RELEASED:
+    #if joy is pressed left and released, show time in 24 hour format in 6 columns
+    if event.action == "pressed":
         sense.clear()  
         print("left")
         global choice
         choice = "left"
 
 def pushed_right(event):
-    """ Joystick event 'right', sætter 12 timers format, i 6 colonner"""
-    if event.action != ACTION_RELEASED:
+    #if the joy pressed right, show time in 12 hour format in 6 columns
+    if event.direction == "right" and event.action == "pressed":
         sense.clear()  
         print("right")
         global choice
         choice = "right" 
 
 def joy_pressed(event):
-    """Hvis joystick trykket ned lukker programmet ned"""
-    if event.action == ACTION_PRESSED:
+    #if the joy middle is pressed = exit
+    if event.direction == "middle" and event.action == "pressed":
+        sense.clear()
         print("Middle Pressed")
         global choice
         choice = "pressed"
+
+
+print(choice)
         
 
 sense.stick.direction_up = pushed_up
 sense.stick.direction_down = pushed_down
 sense.stick.direction_left = pushed_left
 sense.stick.direction_right = pushed_right
-sense.stick.direction_middle = joy_pressed 
-
-try:
-    """ Prøver at bruge kommandolinje parameter, til at vælge hvilket ur der vises ved opstart"""
-    i = sys.argv[1]
-    u = sys.argv[2]
-
-    if i == 'rows' and u == '24':
-        choice = "up"
-    elif i == 'rows' and u == '12':
-        choice = "down"    
-    elif i == 'columns' and u == '24':
-        choice = "left"
-    elif i == 'columns' and u == '12':
-        choice = "right"
-except:
-    print("Except")
-
-print(choice)
+sense.stick.direction_middle = joy_pressed
 
 while True:    
-    """ Loopet der holder scripet i gang, checker vad tiden er
-    og fremviser tiden i det valgte format"""
+    # the loop showing time in the chosen format
     t = datetime.now()
     # print(t)
-    if choice == "up":
+    if choice == "up":  # 24 hour format in 3 rows
         display_binary(t.hour, 3, hour_color)
         display_binary(t.minute, 4, minute_color)
         display_binary(t.second, 5, second_color)
         time.sleep(0.01)
-    elif choice == "down":
-        # print(t.strftime("%H:%M:%S %p"))
+    elif choice == "down": #12 hours format in 3 rows
         display_binary(int(t.strftime("%I")), 3, hour_color)
         display_binary(t.minute, 4, minute_color)
         display_binary(t.second, 5, second_color)
-        display_binary(t.strftime("%p"), 0, None)
+        display_binary(t.strftime("%p"), 0, None)  # viser om det er for eller eftermiddag (Am/PM) = AM : yellow  PM :  cyan'ish
+        #sense.show_message(t.strftime("%H:%M:%S %p"))
         time.sleep(0.01)
-    elif choice == "left":
+    elif choice == "left": #24 timers format i 6 colonner
         display_binary_col(t.hour, 0, hour_color)
         display_binary_col(t.minute, 3, minute_color)
         display_binary_col(t.second, 6, second_color)
         time.sleep(0.01)
-    elif choice == "right":
+    elif choice == "right":  #12 timers format i 6 colonner
         display_binary_col(int(t.strftime("%I")), 0, hour_color)
         display_binary_col(t.minute, 3, minute_color)
         display_binary_col(t.second, 6, second_color)
-        display_binary_col(t.strftime("%p"), 0, None)
+        display_binary_col(t.strftime("%p"), 0, None) # viser om det er for eller eftermiddag (Am/PM) = AM : yellow  PM :  cyan'ish
         time.sleep(0.01)
+    elif choice == "held":
+         #if holding joy DOWN -> holddown show with digits
+            sense.show_message(t.strftime("%H:%M:%S %p"))
     elif choice == "pressed":
-        """ Håndtere afslutning af program """
+        #exit the program
         sense.show_message("Programmet slutter", 0.05)
         sys.exit(0)
