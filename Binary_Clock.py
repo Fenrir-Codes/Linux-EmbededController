@@ -8,18 +8,21 @@ import sys
 
 sense = SenseHat()
 
-hour_color = (0, 255, 0)#green
-minute_color = (0, 0, 255)#blue
-second_color = (255, 0, 0) #red
-am_color = (255,255,0) #gul
-pm_color = (0,255,255) #cyan
-off = (0, 0, 0) #off color
-choice = "up" #choice default UP
+hour_color = (0, 255, 0)    #green
+minute_color = (0, 0, 255)  #blue
+second_color = (255, 0, 0)  #red
+am_color = (255,255,0)      #yellow
+pm_color = (0,255,255)      #cyan'ish
+off = (0, 0, 0)             #off color
+choice = "up"               #choice default UP
 
-sense.show_message("Programmet starter", 0.05)# message to show at start
+#message to show at start
+sense.show_message("Programmet starter", 0.05)
 
+#clear diodes
 sense.clear() #clear diodes
 
+#binary display row
 def display_binary(value, row, color):
     #setting color on a diode if there should show 6 columns
     if value == "AM":
@@ -33,7 +36,8 @@ def display_binary(value, row, color):
                 sense.set_pixel(x, row, color)
             else:
                 sense.set_pixel(x, row, off)
-
+                
+#binary display column
 def display_binary_col(value, column, color):
     #setting color on a diode if there should show 6 columns
     numbers = []
@@ -109,14 +113,14 @@ def joy_pressed(event):
         choice = "pressed"
 
 
-print(choice) # print your choice to terminal
+print(choice) #print your choice to terminal
         
-# sense joystick events calling definitions
-sense.stick.direction_up = pushed_up # if pushed up
-sense.stick.direction_down = pushed_down # if pushed down
-sense.stick.direction_left = pushed_left #if pushed left
-sense.stick.direction_right = pushed_right # if pushed right
-sense.stick.direction_middle = joy_pressed # joy middle pressed event
+# sense joystick on event assigns the action of:
+sense.stick.direction_up = pushed_up           # pushed up
+sense.stick.direction_down = pushed_down       # pushed down
+sense.stick.direction_left = pushed_left       # pushed left
+sense.stick.direction_right = pushed_right     #  pushed right
+sense.stick.direction_middle = joy_pressed     # joy middle pressed event
 
 while True:    
     # the loop showing time in the chosen format
