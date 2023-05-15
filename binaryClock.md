@@ -9,7 +9,7 @@ date: May, 11, 2023
 BinaryClock - Program to display the time in binary and decimal value on sense hat.
 
 # SYNOPSIS
-**binaryClock** [*OPTION1*] [*OPTION2*]
+**binaryClock**
 
 # DESCRIPTION
 **binaryClock** This is a Python script that displays the time in binary values. Seconds are shown in red, minutes in blue, and hours in green. At the start of the program, a corresponding message is displayed.
