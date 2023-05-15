@@ -1,3 +1,6 @@
+# this is just for testing purposes!!!!
+
+
 from sense_hat import SenseHat
 from time import sleep
 import datetime
