@@ -10,7 +10,8 @@ BinaryClock - Program to display the time in binary and decimal value on sense h
 
 # SYNOPSIS
 **binaryClock**
-We had to make a binary clock that can display the time binary in several ways using a joystick on a sense hat device, using the python programming language.
+
+-We had to make a binary clock that can display the time binary in several ways using a joystick on a sense hat device, using the python programming language.
 
 # DESCRIPTION
 **binaryClock** This is a Python script that displays the time in binary values. Seconds are shown in red, minutes in blue, and hours in green. At the start of the program, a corresponding message is displayed.
