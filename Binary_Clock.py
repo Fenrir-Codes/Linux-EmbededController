@@ -122,6 +122,22 @@ sense.stick.direction_left = pushed_left       # pushed left
 sense.stick.direction_right = pushed_right     #  pushed right
 sense.stick.direction_middle = joy_pressed     # joy middle pressed event
 
+#Trying to use command line parameter to choose which clock is displayed at startup
+try:
+    i = sys.argv[1]
+    u = sys.argv[2]
+
+    if i == 'rows' and u == '24':
+        choice = "up"
+    elif i == 'rows' and u == '12':
+        choice = "down"    
+    elif i == 'columns' and u == '24':
+        choice = "left"
+    elif i == 'columns' and u == '12':
+        choice = "right"
+except:
+    print("Except")
+
 while True:    
     # the loop showing time in the chosen format
     t = datetime.now() #current time and date
